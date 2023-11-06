@@ -1,0 +1,9 @@
+---
+- hosts: head_servers
+  vars:
+    local_deployment_path: ./build
+    deployment_path: /deployments/tt/compose
+  roles:
+#    - common
+    - docker-compose
+    - main-app

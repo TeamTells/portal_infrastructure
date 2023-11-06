@@ -1,0 +1,29 @@
+---
+- name: Create project directory
+  file: state=directory path="{{ deployment_path }}" mode="0700"
+
+- name: Transfer docker-compose project to remote
+  synchronize:
+    src: "{{ local_deployment_path }}"
+    dest: "{{ deployment_path }}"
+    recursive: True
+    delete: True
+    rsync_opts:
+      - "--usermap='*:{{ hostvars[inventory_hostname].ansible_user_uid }}'"
+      - "--groupmap='*:{{ hostvars[inventory_hostname].ansible_user_gid }}'"
+
+- name: "Stop all services"
+  community.docker.docker_compose:
+    project_src: '{{ deployment_path }}'
+    stopped: true
+
+- name: "Rebuild and deploy project {% if dct_recreate == True %}Docker Compose Recreate is enabled - build is slower{% endif %}"
+  community.docker.docker_compose:
+    project_src: '{{ deployment_path }}'
+    recreate: '{% if dct_recreate == True %}always{% else %}smart{% endif %}'
+    build: true
+
+- name: "Start all services"
+  community.docker.docker_compose:
+    project_src: '{{ deployment_path }}'
+    restarted: true
