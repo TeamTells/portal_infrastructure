@@ -15,6 +15,7 @@ The repository is organized into several directories, each serving a specific pu
     - `Jenkinsfile`: *(Planned for future implementation)*
     - `Dockerfile`: This file creates an image for a complete CI/CD environment.
     - `scripts`: This subdirectory contains several scripts:
+        - `fresh-machine-prepare.sh`: This script is intended to run to terraform a fresh machine before ansible usage.
         - `build.sh`: *(Planned for future implementation)* This script is intended to build images.
         - `test.sh`: *(Planned for future implementation)*
         - `deploy.sh`: This script runs Ansible and accepts one argument indicating the selected environment (dev/prod).

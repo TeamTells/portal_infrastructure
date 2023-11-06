@@ -1,6 +1,15 @@
 ---
+- name: Get the username running the deploy
+  become: false
+  local_action: command whoami
+  register: username_on_the_host
+
 - name: Create project directory
-  file: state=directory path="{{ deployment_path }}" mode="0700"
+  become: yes
+  file:
+    path: "{{ deployment_path }}"
+    state: directory
+    mode: '0777'
 
 - name: Transfer docker-compose project to remote
   synchronize:
@@ -9,21 +18,24 @@
     recursive: True
     delete: True
     rsync_opts:
-      - "--usermap='*:{{ hostvars[inventory_hostname].ansible_user_uid }}'"
-      - "--groupmap='*:{{ hostvars[inventory_hostname].ansible_user_gid }}'"
+      - "--exclude=docker/data"
 
 - name: "Stop all services"
-  community.docker.docker_compose:
-    project_src: '{{ deployment_path }}'
-    stopped: true
+  become: yes
+  shell: "docker-compose -f {{ deployment_path }}/docker/docker-compose.yml down"
+  args:
+    chdir: "{{ deployment_path }}/docker"
 
-- name: "Rebuild and deploy project {% if dct_recreate == True %}Docker Compose Recreate is enabled - build is slower{% endif %}"
-  community.docker.docker_compose:
-    project_src: '{{ deployment_path }}'
-    recreate: '{% if dct_recreate == True %}always{% else %}smart{% endif %}'
-    build: true
+- name: "Rebuild project {% if dct_recreate == True %}Docker Compose Recreate is enabled - build is slower{% endif %}"
+  become: yes
+  shell: "docker-compose -f {{ deployment_path }}/docker/docker-compose.yml build {% if dct_recreate == True %}--force-recreate{% endif %}"
+  args:
+    chdir: "{{ deployment_path }}/docker"
 
 - name: "Start all services"
-  community.docker.docker_compose:
-    project_src: '{{ deployment_path }}'
-    restarted: true
+  become: yes
+  shell: "docker-compose -f {{ deployment_path }}/docker/docker-compose.yml up -d"
+  args:
+    chdir: "{{ deployment_path }}/docker"
+  environment:
+    HOSTNAME: "{{ public_hostname }}"

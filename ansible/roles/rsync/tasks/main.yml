@@ -1,0 +1,10 @@
+---
+
+- name: Install RSync
+  become: True
+  apt:
+    pkg:
+      - rsync
+    update_cache: yes
+    install_recommends: yes
+    state: present
