@@ -25,7 +25,7 @@ services:
 
   web:
     build:
-      context: ${WEB_DIR:-../web}
+      context: https://github.com/TeamTells/portal_web.git#master
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.web.rule=Host(`${HOSTNAME:-localhost}`)"
@@ -40,7 +40,7 @@ services:
 
   backend:
     build:
-      context: ${BACKEND_DIR:-../backend}
+      context: https://github.com/TeamTells/portal_back.git#TTP-20
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.backend.rule=Host(`${HOSTNAME:-localhost}`) && PathPrefix(`/api`)"
