@@ -1,55 +1,19 @@
 version: '3.0'
 
 services:
-  traefik:
-    image: traefik:v2.10
-    command:
-      - "--api.insecure=true"
-      - "--providers.docker=true"
-      - "--providers.docker.exposedbydefault=false"
-      - "--entrypoints.web.address=:80"
-      - "--entrypoints.websecure.address=:443"
-      - "--certificatesresolvers.le.acme.httpchallenge=true"
-      - "--certificatesresolvers.le.acme.httpchallenge.entrypoint=web"
-      - "--certificatesresolvers.le.acme.email=admin@fcd.su"
-      - "--certificatesresolvers.le.acme.storage=/letsencrypt/acme.json"
-    ports:
-      - "8701:80"
-      - "8702:443"
-      - "8703:8080"
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - ./letsencrypt:/letsencrypt
-    networks:
-      app_network:
-
   web:
     build:
       context: https://github.com/TeamTells/portal_web.git#master
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.web.rule=Host(`${HOSTNAME:-localhost}`)"
-      - "traefik.http.routers.web.entrypoints=web"
-      - "traefik.http.routers.web.middlewares=redirect-to-https"
-      - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
-      - "traefik.http.routers.web-secured.rule=Host(`${HOSTNAME:-localhost}`)"
-      - "traefik.http.routers.web-secured.entrypoints=websecure"
-      - "traefik.http.routers.web-secured.tls.certresolver=le"
+    environment:
+      - host=golang
+    ports:
+      - "8704:80"
     networks:
-      app_network:
+      - app_network
 
   backend:
     build:
       context: https://github.com/TeamTells/portal_back.git#TTP-20
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.backend.rule=Host(`${HOSTNAME:-localhost}`) && PathPrefix(`/api`)"
-      - "traefik.http.routers.backend.entrypoints=web"
-      - "traefik.http.routers.backend.middlewares=redirect-to-https"
-      - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
-      - "traefik.http.routers.backend-secured.rule=Host(`${HOSTNAME:-localhost}`) && PathPrefix(`/api`)"
-      - "traefik.http.routers.backend-secured.entrypoints=websecure"
-      - "traefik.http.routers.backend-secured.tls.certresolver=le"
     environment:
       - DB_HOST=db
       - DB_USER=${DB_USER:-postgres}
