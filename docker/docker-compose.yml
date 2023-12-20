@@ -19,6 +19,7 @@ services:
       - DB_USER=${DB_USER:-postgres}
       - DB_PASSWORD=${DB_PASSWORD:-othiarahJa1eJoow}
       - DB_NAME=${DB_NAME:-app}
+      - DB_DOCUMENTATION_NAME=${DB_DOCUMENTATION_NAME:-app}
       - BACKEND_PORT=80
     depends_on:
       - db
