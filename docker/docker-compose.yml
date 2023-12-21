@@ -34,6 +34,8 @@ services:
       - POSTGRES_USER=${DB_USER:-postgres}
       - POSTGRES_PASSWORD=${DB_PASSWORD:-othiarahJa1eJoow}
       - POSTGRES_DB=${DB_NAME:-app}
+    ports:
+      - "5432:5432"
     volumes:
       - ./data/db:/var/lib/postgresql/data
     networks:
