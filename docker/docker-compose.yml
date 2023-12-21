@@ -24,7 +24,7 @@ services:
     depends_on:
       - db
     ports:
-      - "8704:4200"
+      - "4200:4200"
     networks:
       app_network:
 
