@@ -3,7 +3,7 @@ version: '3.0'
 services:
   web:
     build:
-      context: https://github.com/TeamTells/portal_web.git#master
+      context: https://github.com/TeamTells/portal_web.git#TTP-20
     environment:
       - host=golang
     ports:
