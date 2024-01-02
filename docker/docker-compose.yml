@@ -40,8 +40,10 @@ services:
     volumes:
       - ./data/db:/var/lib/postgresql/data
     networks:
-      app_network:
+      local:
 
 networks:
   app_network:
     driver: bridge
+  local:
+    driver: local
