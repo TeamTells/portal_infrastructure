@@ -1,6 +1,20 @@
 version: '3.0'
 
 services:
+  db:
+    image: postgres:16
+    environment:
+      - POSTGRES_USER=${DB_USER:-postgres}
+      - POSTGRES_PASSWORD=${DB_PASSWORD:-othiarahJa1eJoow}
+      - POSTGRES_DB=${DB_NAME:-teamtells}
+      - DB_DOCUMENTATION_NAME=${DB_DOCUMENTATION_NAME:-documentations}
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./data/db:/var/lib/postgresql/data
+    networks:
+      app_network:
+
   web:
     build:
       context: https://github.com/TeamTells/portal_web.git#TTP-20
@@ -23,27 +37,13 @@ services:
       - BACKEND_PORT=8080
     depends_on:
       - db
+    links:
+      - db
     ports:
       - "8705:8080"
     networks:
       app_network:
 
-  db:
-    image: postgres:16
-    environment:
-      - POSTGRES_USER=${DB_USER:-postgres}
-      - POSTGRES_PASSWORD=${DB_PASSWORD:-othiarahJa1eJoow}
-      - POSTGRES_DB=${DB_NAME:-teamtells}
-      - DB_DOCUMENTATION_NAME=${DB_DOCUMENTATION_NAME:-documentations}
-    ports:
-      - "5432:5432"
-    volumes:
-      - ./data/db:/var/lib/postgresql/data
-    networks:
-      local:
-
 networks:
   app_network:
     driver: bridge
-  local:
-    driver: local
