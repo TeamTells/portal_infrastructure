@@ -1,8 +1,8 @@
 version: '3.3'
 
 services:
-  db:
-    container_name: db
+  db_postgres:
+    container_name: db_postgres
     image: postgres:16
     environment:
       - POSTGRES_USER=${DB_USER:-postgres}
@@ -32,7 +32,7 @@ services:
     build:
       context: https://github.com/TeamTells/portal_back.git#TTP-20
     environment:
-      - DB_HOST=${DB_HOST:-db}
+      - DB_HOST=${DB_HOST:-db_postgres}
       - DB_USER=${DB_USER:-postgres}
       - DB_PASSWORD=${DB_PASSWORD:-othiarahJa1eJoow}
       - DB_NAME=${DB_NAME:-teamtells}
