@@ -10,7 +10,7 @@ services:
       - POSTGRES_DB=${DB_NAME:-teamtells}
       - DB_DOCUMENTATION_NAME=${DB_DOCUMENTATION_NAME:-documentations}
     ports:
-      - "5432:5432"
+      - "5431:5432"
     volumes:
       - ./data/db:/var/lib/postgresql/data
     networks:
@@ -32,7 +32,7 @@ services:
     build:
       context: https://github.com/TeamTells/portal_back.git#TTP-20
     environment:
-      - DB_HOST=${DB_HOST:-db}
+      - DB_HOST=${DB_HOST:-localhost}
       - DB_USER=${DB_USER:-postgres}
       - DB_PASSWORD=${DB_PASSWORD:-othiarahJa1eJoow}
       - DB_NAME=${DB_NAME:-teamtells}
