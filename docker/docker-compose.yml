@@ -32,7 +32,7 @@ services:
     build:
       context: https://github.com/TeamTells/portal_back.git#TTP-20
     environment:
-      - DB_HOST=${DB_HOST:-localhost}
+      - DB_HOST=${DB_HOST:-db}
       - DB_USER=${DB_USER:-postgres}
       - DB_PASSWORD=${DB_PASSWORD:-othiarahJa1eJoow}
       - DB_NAME=${DB_NAME:-teamtells}
