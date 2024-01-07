@@ -6,8 +6,6 @@ services:
     environment:
       - POSTGRES_USER=${DB_USER:-postgres}
       - POSTGRES_PASSWORD=${DB_PASSWORD:-othiarahJa1eJoow}
-    ports:
-      - "5431:5432"
     volumes:
       - ./data/db:/var/lib/postgresql/data
     networks:
