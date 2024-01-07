@@ -39,9 +39,9 @@ services:
       - DB_DOCUMENTATION_NAME=${DB_DOCUMENTATION_NAME:-documentations}
       - BACKEND_PORT=8080
     depends_on:
-      - db
+      - db_postgres
     links:
-      - db
+      - db_postgres
     ports:
       - "8705:8080"
     networks:
