@@ -1,21 +1,17 @@
 version: '3.3'
-
 services:
   db_postgres:
-    container_name: db_postgres
+    container_name: composepostgres
     image: postgres:16
     environment:
       - POSTGRES_USER=${DB_USER:-postgres}
       - POSTGRES_PASSWORD=${DB_PASSWORD:-othiarahJa1eJoow}
-      - POSTGRES_DB=${DB_NAME:-teamtells}
-      - DB_DOCUMENTATION_NAME=${DB_DOCUMENTATION_NAME:-documentations}
     ports:
       - "5431:5432"
     volumes:
       - ./data/db:/var/lib/postgresql/data
     networks:
-      app_network:
-
+      - app_network
   web:
     container_name: portal_web
     build:
@@ -26,13 +22,12 @@ services:
       - "8704:80"
     networks:
       - app_network
-
   backend:
     container_name: portal_back
     build:
       context: https://github.com/TeamTells/portal_back.git#TTP-20
     environment:
-      - DB_HOST=${DB_HOST:-db_postgres}
+      - DB_HOST=${DB_HOST:-composepostgres}
       - DB_USER=${DB_USER:-postgres}
       - DB_PASSWORD=${DB_PASSWORD:-othiarahJa1eJoow}
       - DB_NAME=${DB_NAME:-teamtells}
@@ -40,13 +35,10 @@ services:
       - BACKEND_PORT=8080
     depends_on:
       - db_postgres
-    links:
-      - db_postgres
     ports:
       - "8705:8080"
     networks:
-      app_network:
-
+      - app_network
 networks:
   app_network:
     driver: bridge
